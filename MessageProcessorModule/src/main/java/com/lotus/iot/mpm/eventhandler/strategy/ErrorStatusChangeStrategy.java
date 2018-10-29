@@ -13,7 +13,7 @@ import java.util.Map;
  * @since 2018-05-22
  */
 @Component
-public class ErrorStatusChangeStrategy extends AbstractStatusChangeStrategy {
+public class ErrorStatusChangeStrategy extends StatusChangeStrategy {
     private Map<StatusType, String> messageBasedOnPreviousStateMap;
 
     public ErrorStatusChangeStrategy() {

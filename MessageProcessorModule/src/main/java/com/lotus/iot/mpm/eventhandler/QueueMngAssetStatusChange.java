@@ -2,10 +2,8 @@ package com.lotus.iot.mpm.eventhandler;
 
 import com.lotus.iot.mpm.eventhandler.datamodel.AssetStatusEventService;
 import com.lotus.iot.mpm.eventhandler.objectmodel.AssetStatusChange;
-import com.lotus.iot.mpm.eventhandler.strategy.AbstractStatusChangeStrategy;
-import com.lotus.iot.mpm.eventhandler.strategy.ErrorStatusChangeStrategy;
-import com.lotus.iot.mpm.eventhandler.strategy.GeneralStatusChangeStrategy;
-import com.lotus.iot.mpm.objectmodel.type.StatusType;
+import com.lotus.iot.mpm.eventhandler.strategy.StatusChangeStrategy;
+import com.lotus.iot.mpm.eventhandler.strategy.StatusChangeStrategyManager;
 import com.lotus.iot.mpm.util.PersistentQueueMng;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Niloufar Mazloumpour
@@ -25,20 +21,15 @@ import java.util.Map;
 public class QueueMngAssetStatusChange extends PersistentQueueMng {
     private final static Logger LOGGER = LoggerFactory.getLogger(QueueMngAssetStatusChange.class);
     private AssetStatusChangeQueue assetStatusChangeQueue;
-    private Map<StatusType, AbstractStatusChangeStrategy> statusChangeStartegyMap;
     private AssetStatusEventService assetStatusEventService;
+    private StatusChangeStrategyManager statusChangeStrategyManager;
 
     @Autowired
     public QueueMngAssetStatusChange(AssetStatusChangeQueue assetStatusChangeQueue,
-                                     ErrorStatusChangeStrategy errorStatusChangeLogStrategy,
-                                     GeneralStatusChangeStrategy generalStatusChangeStrategy,
-                                     AssetStatusEventService assetStatusEventService) {
+                                     AssetStatusEventService assetStatusEventService, StatusChangeStrategyManager statusChangeStrategyManager) {
         this.assetStatusChangeQueue = assetStatusChangeQueue;
         this.assetStatusEventService = assetStatusEventService;
-        this.statusChangeStartegyMap = new HashMap<>();
-        this.statusChangeStartegyMap.put(StatusType.ERROR, errorStatusChangeLogStrategy);
-        this.statusChangeStartegyMap.put(StatusType.WARNING, generalStatusChangeStrategy);
-        this.statusChangeStartegyMap.put(StatusType.NORMAL, generalStatusChangeStrategy);
+        this.statusChangeStrategyManager = statusChangeStrategyManager;
     }
 
     @PostConstruct
@@ -54,7 +45,7 @@ public class QueueMngAssetStatusChange extends PersistentQueueMng {
             //log status change considering previous status
             LOGGER.debug("Fetched assetStatusChange {} from Queue with size: {}",
                     assetStatusChange, assetStatusChangeQueue.size());
-            AbstractStatusChangeStrategy statusChangeStrategy = this.statusChangeStartegyMap.get(assetStatusChange.getNewStatus());
+            StatusChangeStrategy statusChangeStrategy = statusChangeStrategyManager.chooseStrategy(assetStatusChange.getNewStatus());
             statusChangeStrategy.log(assetStatusChange);
             //notify event
             assetStatusEventService.statusChange(assetStatusChange.getAssetId(), assetStatusChange.getNewStatus());

@@ -16,16 +16,37 @@ public class AssetStatusMessage extends Message {
 
     private Date createdAt;
 
+    public AssetStatusMessage() {
+    }
+
+    public AssetStatusMessage(String assetId, StatusType statusType, Date createdAt) {
+        this.assetId = assetId;
+        this.statusType = statusType;
+        this.createdAt = createdAt;
+    }
+
     public String getAssetId() {
         return assetId;
+    }
+
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
     public StatusType getStatusType() {
         return statusType;
     }
 
+    public void setStatusType(StatusType statusType) {
+        this.statusType = statusType;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

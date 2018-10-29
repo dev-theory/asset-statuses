@@ -14,11 +14,18 @@ import org.slf4j.LoggerFactory;
 public class SampleListener implements Observer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SampleListener.class);
 
+    private boolean isNotified = false;
+
     public SampleListener() {
+    }
+
+    public boolean isNotified() {
+        return isNotified;
     }
 
     @Override
     public void update(Observable o) {
+        isNotified = true;
         LOGGER.info("A listener was notified about this event");
     }
 }
