@@ -1,0 +1,30 @@
+Often created variables for clarity even if they weren't necessary
+Decided to implement a more flexible solution as opposed to the simpler one (left commented code in showing alternate solution)
+
+Added additional event "AssetFailedAbruptly" to allow for different messages to be output when status type is changed to ERROR from WARNING or NORMAL.
+	- As opposed to passing the old asset status to the event and deciding on the message to output there
+	
+Decided to not raise any events when status goes from null to NORMAL because it seemed like the sensor was being added to the system
+	- Depending upon the reality of the situation, I think I would recommend creating another event such as "assetMovedFromNullToNormal" for this
+	
+	- Another option would be to create an event for every asset status change
+	(assetMovedFromNormalToWarning, assetMovedFromNormalToError, assetMovedFromNullToWarning...)
+	Didn't implement as it seemed overkill for this assignment
+	
+	- I would suggest in reality that the error messages include the previous asset status.
+	This explicitly tells the user what the previous status was instead of implying it (abruptly failed vs eventually failed)
+
+		message = "Asset " + asset_id + " has changed from " + old_status + " to " + new_status + " at " + created_at;
+
+consumer.js
+	- Would be simpler to pass the message to the event. This couples the message to the event creation though so I separated them
+    
+databaseManager.js - updateStatusesDB
+	- Code was simpler to do DELETE then POST if asset status existed in the database organized by statusType
+	- Chose to POST/update the asset status instead as if it were a real database
+
+Could have improved query performance possibly by using a search algorithm, but I believe a database takes care of that in reality
+
+Steps taken due to project being an assignment
+	- Wrote code synchronously instead of asynchronously
+	- Didn't give the option for customers to unsubscribe from events
