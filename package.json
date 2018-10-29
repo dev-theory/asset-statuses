@@ -1,0 +1,20 @@
+{
+  "name": "asset-statuses-master",
+  "version": "1.0.0",
+  "description": "Considering IoT most of the modern plants or production facilities these days are equipped with a large number of sensors that send various data about certain assets or processes of the plant. In our fictional plant, we have thousands of sensors that dispatch statuses of assets via messages to some _\"real-time queue\"_. This fictional queue emits millions of asset status messages per second and for each message, it calls the `handle(Message message)` function of a message processor(s) attached to it.",
+  "main": "main.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "node-stopwatch": "0.0.1"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
