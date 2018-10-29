@@ -1,0 +1,18 @@
+Improvements
+    consumer.js
+        - add option to unsubscribe from events
+
+    eventManager.js    
+        - add some error handling in case any of the input parameters are incorrect
+
+    queriesManager.js
+        - would be nice to add the option in the queries to put in a single object instead of an array and have it still work
+        - add test where I pass in the wrong database, show the correct error
+
+        getAssetStatusesByAssetIDs
+            - add regular expression test to check if all the input_ids are valid
+            - can't currently differentiate between user error or if it just doesn't exist in the database yet
+
+Experiments
+    - statuses_db: check if only storing assetID improves speed
+    - statuses_db: check if using 3 separate arrays instead of 1 object with 3 arrays improves speed
